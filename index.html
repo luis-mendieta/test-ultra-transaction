@@ -11,7 +11,7 @@
     integrity="sha256-Q9hnBpgBFstzZOr+OKFOWZWfcF5nFXO8Qz48Nmndo6U="></script>
   <style type="text/css" media="screen">
     #editor {
-      height: 50vh;
+      height: 30vh;
     }
   </style>
 </head>
@@ -34,11 +34,18 @@
 }
     </div>
     <div class="my-4">
-      </span>
       <div class="d-grid">
-        <button class="btn btn-warning btn-lg" id="execute">Execute</button>
+        <button class="btn btn-warning btn-lg" id="execute">Execute 🚀</button>
         <small class="mt-2"><i>This button will trigger the method <b>ultra.signTransaction({...})</b></i></small>
       </div>
+    </div>
+    <div class="my-4">
+      <h4>☝🏼 ultra.signTransaction() response</h4>
+      <pre id="signTransactionResult"></pre>
+    </div>
+    <div class="my-4">
+      <h4>✌🏼 ultra.getTransactionStatus() response</h4>
+      <pre id="getTransactionStatusResult"></pre>
     </div>
     <script>
       // CONFIGURE EDITOR
@@ -51,12 +58,18 @@
       document.getElementById("execute").onclick = function () {
         let tx = editor.getValue();
         tx = JSON.parse(tx);
+        // GET TRANSACTION ID
         ultra.signTransaction(tx)
           .then((response) => {
-            alert(JSON.stringify(response))
+              document.getElementById("signTransactionResult").textContent = JSON.stringify(response, null, '\t');
+              // GET TRANSACTION STATUS (FEEDBACK FROM THE TRANSACTION APPLICATION)
+              return ultra.getTransactionStatus(response?.data?.transactionId);
+          })
+          .then((response) => {
+              document.getElementById("getTransactionStatusResult").textContent = JSON.stringify(response, null, '\t');
           })
           .catch((error) => {
-            alert(JSON.stringify(error));
+              document.getElementById("signTransactionResult").textContent = JSON.stringify(error, null, '\t');
           });
       }
     </script>
